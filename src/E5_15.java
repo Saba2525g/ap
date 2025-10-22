@@ -1,7 +1,7 @@
 
-    import java.util.Scanner;
+    import java.util.Scanner;  //E5.15
 
-    public class ex2 {
+    public class E5_15 {
         public static void main(String[] args) {
             Scanner input = new Scanner(System.in);
 
@@ -29,4 +29,4 @@
         }
     }
 
-}
+

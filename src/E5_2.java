@@ -1,6 +1,6 @@
 import java.util.Scanner;      //E5.2
 
-public class first {
+public class E5_2 {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 

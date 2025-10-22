@@ -1,21 +1,20 @@
-import java.util.Scanner;
+import java.util.Scanner; //E6.3a
 
-public class thirty {
+public class E6_3a {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
         System.out.print("Enter a line: ");
         String line = input.nextLine();
 
-        int count = 0;
+        System.out.print("Uppercase letters: ");
         for (int i = 0; i < line.length(); i++) {
             char ch = line.charAt(i);
-            if ("aeiouAEIOU".indexOf(ch) != -1) {
-                count++;
+            if (ch >= 'A' && ch <= 'Z') {
+                System.out.print(ch);
             }
         }
 
-        System.out.println("Number of vowels: " + count);
         input.close();
     }
 }
