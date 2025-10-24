@@ -1,19 +1,23 @@
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.nio.file.Files;
 
 public class Sudoku {
     public static void main(String[] args) throws Exception {
+        File file = new File(Paths.get("sudoku.txt").toString());
+        Scanner fileInput = new Scanner(file);
 
-        Scanner fileInput = new Scanner(new File("C:\\Users\\SKY\\SOFT\\githubexer\\src\\sudoku.txt"));
         Scanner userInput = new Scanner(System.in);
 
         int[][] board = new int[9][9];
 
         // Read Sudoku board from file
         for (int i = 0; i < 9; i++) {
+            String line = fileInput.nextLine();
             for (int j = 0; j < 9; j++) {
-                board[i][j] = fileInput.nextInt();
+                board[i][j] = Integer.parseInt(line.split(" ")[j]);
             }
         }
         fileInput.close();
