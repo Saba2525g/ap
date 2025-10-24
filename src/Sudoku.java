@@ -22,7 +22,7 @@ public class Sudoku {
         }
         fileInput.close();
 
-        System.out.println("🎯 Sudoku game started! Empty cells are shown as 0.\n");
+        System.out.println("Sudoku game started! Empty cells are shown as 0.\n");
 
         // Main game loop
         while (!isComplete(board)) {
@@ -45,17 +45,18 @@ public class Sudoku {
             System.out.print("Enter number (1-9): ");
             int num = userInput.nextInt();
 
+            //TO Do: check for valid input: e.g: 10 should nor be allowed
             if (board[row][col] != 0) {
-                System.out.println("❌ This cell is already filled, try again.\n");
+                System.out.println("This cell is already filled, try again.\n");
             } else if (!isValid(board, row, col, num)) {
-                System.out.println("❌ This number is not allowed here (violates row, column or block rules).\n");
+                System.out.println("This number is not allowed here (violates row, column or block rules).\n");
             } else {
                 board[row][col] = num;
-                System.out.println("✅ Number placed!\n");
+                System.out.println("Number placed!\n");
             }
         }
 
-        System.out.println("🎉 Congratulations! The board is complete:");
+        System.out.println("Congratulations! The board is complete:");
         // Print final board
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
