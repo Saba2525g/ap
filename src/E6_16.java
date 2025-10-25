@@ -1,4 +1,4 @@
-public class E6_16 {    //E6.16
+public class E6_16 {    //E_6_16
     public static void main(String[] args) {
 
 
