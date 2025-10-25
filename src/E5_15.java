@@ -1,5 +1,5 @@
 
-    import java.util.Scanner;  //E5.15
+    import java.util.Scanner;  //E_5_15
 
     public class E5_15 {
         public static void main(String[] args) {
