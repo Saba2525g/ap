@@ -1,4 +1,4 @@
-public class E6_1a {  //E6.1a
+public class E6_1a {  //E_6_1_a
     public static void main(String[] args) {
         int sum = 0;
 
