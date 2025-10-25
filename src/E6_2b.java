@@ -1,7 +1,7 @@
 
 import java.util.Scanner;
 
-public class E6_2b {      //E6.2b
+public class E6_2b {      //E_6_2_b
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
