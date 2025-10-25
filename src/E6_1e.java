@@ -1,4 +1,4 @@
-import java.util.Scanner; //E6.1e
+import java.util.Scanner; //E_6_1_e
 
 public class E6_1e {
     public static void main(String[] args) {
