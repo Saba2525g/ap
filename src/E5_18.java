@@ -1,4 +1,4 @@
-import java.util.Scanner; //E5.18
+import java.util.Scanner; //E_5_18
 import java.util.Arrays;
 
 public class E5_18 {
