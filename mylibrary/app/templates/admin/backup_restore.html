@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Restore | MyLibrary{% endblock %}
+{% block content %}
+<div style="max-width:720px; margin:0 auto;">
+  <h1 style="font-size:1.8rem; margin-bottom:1rem;">بازیابی (Restore)</h1>
+  <form method="POST" enctype="multipart/form-data" class="glass" style="padding:1.75rem;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label>منبع</label>
+      <select name="source" class="form-control" id="src" onchange="toggleSrc()">
+        <option value="upload">آپلود</option>
+        <option value="existing">از موجود</option>
+      </select>
+    </div>
+    <div class="form-group" id="up">
+      <label>فایل JSON</label>
+      <input type="file" name="file" accept=".json" class="form-control">
+    </div>
+    <div class="form-group" id="ex" style="display:none;">
+      <label>بکاپ</label>
+      <select name="filename" class="form-control">
+        <option value="">-</option>
+        {% for b in backups %}<option value="{{ b.filename }}">{{ b.filename }}</option>{% endfor %}
+      </select>
+    </div>
+    <label style="display:flex; gap:.5rem; color:var(--danger); margin:1rem 0;">
+      <input type="checkbox" name="wipe_before" value="1"> پاک کردن همه قبل از restore
+    </label>
+    <button type="submit" class="btn btn-gold" onclick="return confirm('مطمئنید؟');">شروع</button>
+    <a href="{{ url_for('web_admin.backup_index') }}" class="btn btn-ghost">بازگشت</a>
+  </form>
+</div>
+<script>
+function toggleSrc() {
+  const v = document.getElementById('src').value;
+  document.getElementById('up').style.display = v === 'upload' ? 'block' : 'none';
+  document.getElementById('ex').style.display = v === 'existing' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

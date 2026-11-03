@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Backup | MyLibrary{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+  <h1 style="font-size:1.8rem;">Backup و Restore</h1>
+  <a href="{{ url_for('web_admin.backup_restore') }}" class="btn btn-gold">بازیابی</a>
+</div>
+<div class="glass" style="padding:1.75rem; margin-bottom:1.5rem;">
+  <h2 style="margin-bottom:.75rem;">ایجاد بکاپ جدید</h2>
+  <form method="POST" action="{{ url_for('web_admin.backup_export') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label style="display:flex; align-items:center; gap:.5rem; margin-bottom:1rem;">
+      <input type="checkbox" name="include_passwords" value="1">
+      شامل رمزها (معمولا نیاز نیست)
+    </label>
+    <button type="submit" class="btn btn-gold">ساخت بکاپ</button>
+  </form>
+</div>
+<h2 style="font-size:1.2rem; margin-bottom:.8rem;">بکاپ‌های موجود</h2>
+{% if backups %}
+  <div style="background:#fff; border-radius:12px; overflow:hidden;">
+    <table class="data-table">
+      <thead><tr><th>فایل</th><th>حجم</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+          <tr>
+            <td>{{ b.filename }}</td>
+            <td>{{ b.size_kb }} KB</td>
+            <td>{{ b.modified[:19] }}</td>
+            <td><a href="{{ url_for('web_admin.backup_download', filename=b.filename) }}" class="btn btn-sm btn-primary">دانلود</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="glass" style="padding:2rem; text-align:center; color:var(--gray-500);">هنوز بکاپی ساخته نشده.</div>
+{% endif %}
+{% endblock %}
