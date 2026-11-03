@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}مدیریت کتاب‌ها | MyLibrary{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1.5rem;">مدیریت کتاب‌ها</h1>
+
+<div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; margin-bottom:1.5rem;">
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">کل کتاب‌ها</p>
+    <p style="font-size:1.8rem; color:var(--navy-900); font-weight:700;">{{ stats.total_books }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">موجود</p>
+    <p style="font-size:1.8rem; color:var(--success); font-weight:700;">{{ stats.available_books }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">دسته‌ها</p>
+    <p style="font-size:1.8rem; color:var(--navy-900); font-weight:700;">{{ stats.total_categories }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">نویسنده‌ها</p>
+    <p style="font-size:1.8rem; color:var(--navy-900); font-weight:700;">{{ stats.total_authors }}</p>
+  </div>
+</div>
+
+<div style="display:flex; gap:.8rem; margin-bottom:1.2rem; flex-wrap:wrap;">
+  <a href="{{ url_for('web_books.create') }}" class="btn btn-gold">+ افزودن کتاب</a>
+  <a href="{{ url_for('web_books.categories') }}" class="btn btn-primary">مدیریت دسته‌ها</a>
+  <a href="{{ url_for('web_books.authors') }}" class="btn btn-primary">مدیریت نویسنده‌ها</a>
+</div>
+
+<div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+  <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+    <thead style="background:var(--navy-900); color:#fff;">
+      <tr>
+        <th style="padding:.8rem; text-align:right;">عنوان</th>
+        <th style="padding:.8rem; text-align:right;">ISBN</th>
+        <th style="padding:.8rem; text-align:right;">موجود</th>
+        <th style="padding:.8rem; text-align:right;">عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in books %}
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:.7rem;">{{ b.title }}</td>
+          <td style="padding:.7rem;">{{ b.isbn }}</td>
+          <td style="padding:.7rem;">{{ b.available_copies }} / {{ b.total_copies }}</td>
+          <td style="padding:.7rem;">
+            <a href="{{ url_for('web_books.detail', book_id=b.id) }}" style="color:var(--teal-500);">نمایش</a> |
+            <a href="{{ url_for('web_books.edit', book_id=b.id) }}" style="color:var(--gold-500);">ویرایش</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

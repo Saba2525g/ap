@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}امانت‌های من | MyLibrary{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1.5rem;">امانت‌های من</h1>
+
+<h2 style="font-size:1.2rem; margin:1.5rem 0 .8rem;">کتاب‌های امانت‌گرفته‌شده</h2>
+{% if borrowings %}
+  <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+      <thead style="background:var(--navy-900); color:#fff;">
+        <tr>
+          <th style="padding:.8rem; text-align:right;">کتاب</th>
+          <th style="padding:.8rem; text-align:right;">وضعیت</th>
+          <th style="padding:.8rem; text-align:right;">مهلت</th>
+          <th style="padding:.8rem; text-align:right;">تاریخ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in borrowings %}
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:.7rem;">{{ b.book.title }}</td>
+            <td style="padding:.7rem;">
+              {% if b.status == 'pending' %}<span style="color:var(--warning);">در انتظار</span>
+              {% elif b.status == 'active' %}<span style="color:var(--success);">فعال</span>
+              {% elif b.status == 'overdue' %}<span style="color:var(--danger);">تأخیر</span>
+              {% elif b.status == 'returned' %}<span style="color:var(--gray-500);">بازگشته</span>
+              {% elif b.status == 'rejected' %}<span style="color:var(--danger);">رد شده</span>
+              {% else %}{{ b.status }}{% endif %}
+            </td>
+            <td style="padding:.7rem;">{{ b.due_date.strftime('%Y-%m-%d') if b.due_date else '—' }}</td>
+            <td style="padding:.7rem;">{{ b.requested_at.strftime('%Y-%m-%d') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div style="background:#fff; padding:2rem; text-align:center; border-radius:12px; color:var(--gray-500);">
+    هیچ امانتی ندارید. <a href="{{ url_for('web_books.catalog') }}">کتاب‌ها را ببینید</a>.
+  </div>
+{% endif %}
+
+<h2 style="font-size:1.2rem; margin:2rem 0 .8rem;">رزروها</h2>
+{% if reservations %}
+  <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+      <thead style="background:var(--navy-900); color:#fff;">
+        <tr>
+          <th style="padding:.8rem; text-align:right;">کتاب</th>
+          <th style="padding:.8rem; text-align:right;">وضعیت</th>
+          <th style="padding:.8rem; text-align:right;">تاریخ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reservations %}
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:.7rem;">{{ r.book.title }}</td>
+            <td style="padding:.7rem;">{{ r.status }}</td>
+            <td style="padding:.7rem;">{{ r.reserved_at.strftime('%Y-%m-%d') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div style="background:#fff; padding:2rem; text-align:center; border-radius:12px; color:var(--gray-500);">
+    رزرو فعالی ندارید.
+  </div>
+{% endif %}
+{% endblock %}

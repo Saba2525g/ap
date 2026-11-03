@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}همه امانت‌ها | MyLibrary{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1.5rem;">همه امانت‌ها</h1>
+
+<div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; margin-bottom:1.5rem;">
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">در انتظار</p>
+    <p style="font-size:1.8rem; color:var(--warning); font-weight:700;">{{ stats.pending }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">فعال</p>
+    <p style="font-size:1.8rem; color:var(--success); font-weight:700;">{{ stats.active }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">تأخیر</p>
+    <p style="font-size:1.8rem; color:var(--danger); font-weight:700;">{{ stats.overdue }}</p>
+  </div>
+  <div style="background:#fff; padding:1.2rem; border-radius:12px;">
+    <p style="color:var(--gray-500); font-size:.85rem;">بازگشته</p>
+    <p style="font-size:1.8rem; color:var(--gray-500); font-weight:700;">{{ stats.returned }}</p>
+  </div>
+</div>
+
+<div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+  <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+    <thead style="background:var(--navy-900); color:#fff;">
+      <tr>
+        <th style="padding:.8rem; text-align:right;">دانشجو</th>
+        <th style="padding:.8rem; text-align:right;">کتاب</th>
+        <th style="padding:.8rem; text-align:right;">وضعیت</th>
+        <th style="padding:.8rem; text-align:right;">مهلت</th>
+        <th style="padding:.8rem; text-align:right;">عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in items %}
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:.7rem;">{{ b.student.user.full_name }}</td>
+          <td style="padding:.7rem;">{{ b.book.title }}</td>
+          <td style="padding:.7rem;">
+            {% if b.status == 'pending' %}<span style="color:var(--warning);">در انتظار</span>
+            {% elif b.status == 'active' %}<span style="color:var(--success);">فعال</span>
+            {% elif b.status == 'overdue' %}<span style="color:var(--danger);">تأخیر</span>
+            {% elif b.status == 'returned' %}<span style="color:var(--gray-500);">بازگشته</span>
+            {% else %}{{ b.status }}{% endif %}
+          </td>
+          <td style="padding:.7rem;">{{ b.due_date.strftime('%Y-%m-%d') if b.due_date else '—' }}</td>
+          <td style="padding:.7rem;">
+            {% if b.status in ['active', 'overdue'] %}
+              <form method="POST" action="{{ url_for('web_borrowings.return_one', borrow_id=b.id) }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-primary" style="padding:.3rem .7rem; font-size:.8rem;">ثبت بازگشت</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="{{ url_for('web_borrowings.requests_list') }}" class="btn btn-gold" style="margin-top:1.5rem;">درخواست‌های در انتظار</a>
+{% endblock %}

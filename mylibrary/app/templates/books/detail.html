@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}{{ book.title }} | MyLibrary{% endblock %}
+{% block content %}
+<div style="display:grid; grid-template-columns:280px 1fr; gap:2rem; background:#fff; padding:2rem; border-radius:16px; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+  <div>
+    <div style="height:360px; background:linear-gradient(135deg,var(--navy-900),var(--navy-700)); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--gold-400); font-size:5rem; overflow:hidden;">
+      {% if book.cover_url %}<img src="{{ book.cover_url }}" style="width:100%; height:100%; object-fit:cover;">{% else %}📘{% endif %}
+    </div>
+  </div>
+  <div>
+    <h1 style="font-size:1.8rem; margin-bottom:.5rem; color:var(--navy-900);">{{ book.title }}</h1>
+    <p style="color:var(--gray-500); margin-bottom:1.5rem;">نویسنده: {{ book.author_names }}</p>
+
+    <table style="width:100%; font-size:.95rem; border-collapse:collapse;">
+      <tr><td style="padding:.4rem 0; color:var(--gray-500); width:140px;">ISBN:</td><td>{{ book.isbn }}</td></tr>
+      <tr><td style="padding:.4rem 0; color:var(--gray-500);">ناشر:</td><td>{{ book.publisher or '—' }}</td></tr>
+      <tr><td style="padding:.4rem 0; color:var(--gray-500);">سال انتشار:</td><td>{{ book.publish_year or '—' }}</td></tr>
+      <tr><td style="padding:.4rem 0; color:var(--gray-500);">زبان:</td><td>{{ book.language }}</td></tr>
+      <tr><td style="padding:.4rem 0; color:var(--gray-500);">دسته:</td><td>{{ book.category.name if book.category else '—' }}</td></tr>
+      <tr><td style="padding:.4rem 0; color:var(--gray-500);">تعداد نسخه:</td><td>{{ book.total_copies }} (موجود: {{ book.available_copies }})</td></tr>
+      {% if book.shelf_location %}<tr><td style="padding:.4rem 0; color:var(--gray-500);">قفسه:</td><td>{{ book.shelf_location }}</td></tr>{% endif %}
+    </table>
+
+    {% if book.description %}
+      <div style="margin-top:1.5rem;">
+        <h3 style="margin-bottom:.5rem;">توضیحات</h3>
+        <p style="line-height:1.9; color:#334155;">{{ book.description }}</p>
+      </div>
+    {% endif %}
+
+    <div style="margin-top:2rem; display:flex; gap:.8rem; flex-wrap:wrap;">
+      {% if current_user.is_authenticated and current_user.is_student %}
+        {% if book.is_available %}
+          <form method="POST" action="{{ url_for('web_borrowings.request_borrow', book_id=book.id) }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary">📖 درخواست امانت</button>
+          </form>
+        {% else %}
+          <form method="POST" action="{{ url_for('web_borrowings.reserve', book_id=book.id) }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-gold">🔖 رزرو</button>
+          </form>
+        {% endif %}
+      {% elif not current_user.is_authenticated %}
+        <a href="{{ url_for('web_auth.login', next=request.path) }}" class="btn btn-primary">ورود برای امانت</a>
+      {% endif %}
+
+      {% if current_user.is_authenticated and current_user.can_manage_books %}
+        <a href="{{ url_for('web_books.edit', book_id=book.id) }}" class="btn btn-gold">ویرایش</a>
+      {% endif %}
+
+      <a href="{{ url_for('web_books.catalog') }}" class="btn" style="background:#e2e8f0; color:var(--navy-900);">بازگشت</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

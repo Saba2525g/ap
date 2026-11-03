@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}مدیریت دسته‌ها | MyLibrary{% endblock %}
+{% block content %}
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h1 class="card-title">مدیریت دسته‌ها</h1>
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.name.label }} {{ form.name(class='form-control') }}
+    </div>
+    <div class="form-group">
+      {{ form.description.label }} {{ form.description(class='form-control') }}
+    </div>
+    {{ form.submit(class='btn btn-primary') }}
+  </form>
+  <hr style="margin:1.5rem 0; border:none; border-top:1px solid #e2e8f0;">
+  <ul style="list-style:none; padding:0;">
+    {% for c in categories %}
+      <li style="padding:.5rem 0; border-bottom:1px solid #e2e8f0;">{{ c.name }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('web_books.manage') }}" class="btn" style="background:#e2e8f0; color:var(--navy-900); margin-top:1rem;">بازگشت</a>
+</div>
+{% endblock %}

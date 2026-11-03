@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'ویرایش' if mode == 'edit' else 'افزودن' }} کتاب | MyLibrary{% endblock %}
+{% block content %}
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h1 class="card-title">{{ 'ویرایش کتاب' if mode == 'edit' else 'افزودن کتاب جدید' }}</h1>
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    {% for field in [form.title, form.isbn, form.publisher, form.publish_year, form.pages, form.language, form.total_copies, form.shelf_location, form.cover_url, form.category_id, form.description] %}
+      <div class="form-group">
+        {{ field.label }}
+        {{ field(class='form-control') }}
+        {% for e in field.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+    {% endfor %}
+    <div class="form-group">
+      {{ form.author_ids.label }}
+      {{ form.author_ids(class='form-control', size=5) }}
+    </div>
+    {{ form.submit(class='btn btn-primary') }}
+    <a href="{{ url_for('web_books.catalog') }}" class="btn" style="background:#e2e8f0; color:var(--navy-900);">انصراف</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}داشبورد | MyLibrary{% endblock %}
+{% block content %}
+<div style="margin-bottom:2rem;">
+  <h1 style="font-size:2rem; color:var(--navy-900);">داشبورد</h1>
+  <p style="color:var(--gray-500);">خوش آمدید{% if current_user.is_authenticated %}، {{ current_user.full_name }}{% endif %}</p>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:2rem;">
+  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--teal-500);">
+    <p style="color:var(--gray-500); font-size:.85rem;">کل کتاب‌ها</p>
+    <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.total_books }}</p>
+  </div>
+  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--success);">
+    <p style="color:var(--gray-500); font-size:.85rem;">موجود</p>
+    <p style="font-size:2rem; color:var(--success); font-weight:700;">{{ stats.available_books }}</p>
+  </div>
+  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--gold-500);">
+    <p style="color:var(--gray-500); font-size:.85rem;">اعضا</p>
+    <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.total_users }}</p>
+  </div>
+  {% if stats.get('pending_requests') is not none %}
+    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--warning);">
+      <p style="color:var(--gray-500); font-size:.85rem;">درخواست‌های در انتظار</p>
+      <p style="font-size:2rem; color:var(--warning); font-weight:700;">{{ stats.pending_requests }}</p>
+    </div>
+    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--danger);">
+      <p style="color:var(--gray-500); font-size:.85rem;">امانت‌های فعال</p>
+      <p style="font-size:2rem; color:var(--danger); font-weight:700;">{{ stats.active_loans }}</p>
+    </div>
+  {% endif %}
+  {% if stats.get('my_active') is not none %}
+    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--teal-500);">
+      <p style="color:var(--gray-500); font-size:.85rem;">امانت‌های فعال من</p>
+      <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.my_active }}</p>
+    </div>
+    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--danger);">
+      <p style="color:var(--gray-500); font-size:.85rem;">تأخیرهای من</p>
+      <p style="font-size:2rem; color:var(--danger); font-weight:700;">{{ stats.my_overdue }}</p>
+    </div>
+  {% endif %}
+</div>
+
+<h2 style="font-size:1.3rem; margin-bottom:1rem; color:var(--navy-900);">دسترسی سریع</h2>
+<div style="display:flex; gap:.8rem; flex-wrap:wrap;">
+  <a href="{{ url_for('web_books.catalog') }}" class="btn btn-primary">📚 کاتالوگ کتاب‌ها</a>
+  {% if current_user.is_authenticated %}
+    {% if current_user.is_student %}
+      <a href="{{ url_for('web_borrowings.my') }}" class="btn btn-gold">📖 امانت‌های من</a>
+    {% endif %}
+    {% if current_user.role in ('admin', 'employee') %}
+      <a href="{{ url_for('web_borrowings.requests_list') }}" class="btn btn-gold">📋 درخواست‌های امانت</a>
+      <a href="{{ url_for('web_borrowings.all_list') }}" class="btn btn-primary">📊 همه امانت‌ها</a>
+      <a href="{{ url_for('web_books.manage') }}" class="btn" style="background:#e2e8f0; color:var(--navy-900);">⚙️ مدیریت کتاب‌ها</a>
+    {% endif %}
+  {% else %}
+    <a href="{{ url_for('web_auth.login') }}" class="btn btn-primary">ورود</a>
+    <a href="{{ url_for('web_auth.register') }}" class="btn btn-gold">ثبت‌نام</a>
+  {% endif %}
+</div>
+{% endblock %}

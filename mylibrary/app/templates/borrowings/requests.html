@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}درخواست‌های امانت | MyLibrary{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1.5rem;">درخواست‌های امانت در انتظار</h1>
+
+{% if items %}
+  <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+      <thead style="background:var(--navy-900); color:#fff;">
+        <tr>
+          <th style="padding:.8rem; text-align:right;">دانشجو</th>
+          <th style="padding:.8rem; text-align:right;">کتاب</th>
+          <th style="padding:.8rem; text-align:right;">تاریخ</th>
+          <th style="padding:.8rem; text-align:right;">عملیات</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in items %}
+          <tr style="border-bottom:1px solid #e2e8f0;">
+            <td style="padding:.7rem;">{{ b.student.user.full_name }} ({{ b.student.student_number }})</td>
+            <td style="padding:.7rem;">{{ b.book.title }}</td>
+            <td style="padding:.7rem;">{{ b.requested_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td style="padding:.7rem;">
+              <form method="POST" action="{{ url_for('web_borrowings.approve', borrow_id=b.id) }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-primary" style="padding:.3rem .7rem; font-size:.8rem;">تأیید</button>
+              </form>
+              <form method="POST" action="{{ url_for('web_borrowings.reject', borrow_id=b.id) }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="reason" placeholder="دلیل رد" style="padding:.3rem; font-size:.8rem; border:1px solid #cbd5e1; border-radius:6px; width:120px;">
+                <button type="submit" class="btn" style="padding:.3rem .7rem; font-size:.8rem; background:#fee2e2; color:#7f1d1d;">رد</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div style="background:#fff; padding:2rem; text-align:center; border-radius:12px; color:var(--gray-500);">
+    درخواستی در انتظار نیست.
+  </div>
+{% endif %}
+
+<a href="{{ url_for('web_borrowings.all_list') }}" class="btn btn-primary" style="margin-top:1.5rem;">مشاهده همه امانت‌ها</a>
+{% endblock %}
