@@ -19,6 +19,16 @@ RES_CANCELLED = "cancelled"
 RES_EXPIRED = "expired"
 RESERVATION_STATUSES = {RES_PENDING, RES_READY, RES_FULFILLED, RES_CANCELLED, RES_EXPIRED}
 
+
+def _aware(dt):
+    """Ensure a datetime is timezone-aware (UTC)."""
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 class Borrowing(BaseModel, TimestampMixin):
     __tablename__ = "borrowings"
     student_id = db.Column(db.Integer, db.ForeignKey("students.id", ondelete="RESTRICT"), nullable=False, index=True)
@@ -42,20 +52,24 @@ class Borrowing(BaseModel, TimestampMixin):
     def is_overdue(self) -> bool:
         if self.status in (STATUS_RETURNED, STATUS_REJECTED, STATUS_CANCELLED):
             return False
-        if not self.due_date:
+        due = _aware(self.due_date)
+        if not due:
             return False
-        return datetime.now(timezone.utc) > self.due_date
+        return datetime.now(timezone.utc) > due
 
     def compute_fine(self, fine_per_day: int) -> int:
-        if not self.due_date or not self.returned_at:
+        due = _aware(self.due_date)
+        returned = _aware(self.returned_at)
+        if not due or not returned:
             return self.fine_amount or 0
-        if self.returned_at <= self.due_date:
+        if returned <= due:
             return 0
-        days_late = (self.returned_at - self.due_date).days
+        days_late = (returned - due).days
         return max(0, days_late) * fine_per_day
 
     def __repr__(self) -> str:
         return f"<Borrowing #{self.id} student={self.student_id} book={self.book_id} status={self.status}>"
+
 
 class Reservation(BaseModel, TimestampMixin):
     __tablename__ = "reservations"
