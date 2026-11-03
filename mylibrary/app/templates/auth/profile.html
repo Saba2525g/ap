@@ -1,0 +1,30 @@
+﻿{% extends 'base.html' %}
+{% block title %}پروفایل | MyLibrary{% endblock %}
+{% block content %}
+<div class="card" style="max-width:640px; margin:0 auto;">
+  <h1 class="card-title">پروفایل من</h1>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:.8rem; margin-bottom:1.5rem; color:var(--gray-500); font-size:.9rem;">
+    <div><strong>ایمیل:</strong> {{ current_user.email }}</div>
+    <div><strong>نقش:</strong> {{ {'student':'دانشجو','employee':'کارمند','admin':'مدیر'}.get(current_user.role, current_user.role) }}</div>
+  </div>
+
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.full_name.label }}
+      {{ form.full_name(class='form-control') }}
+      {% for e in form.full_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.phone.label }}
+      {{ form.phone(class='form-control') }}
+      {% for e in form.phone.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+    </div>
+    {{ form.submit(class='btn btn-primary') }}
+  </form>
+
+  <hr style="margin:1.5rem 0; border:none; border-top:1px solid #e2e8f0;">
+  <a href="{{ url_for('web_auth.change_password_view') }}" class="btn btn-gold">تغییر رمز عبور</a>
+</div>
+{% endblock %}

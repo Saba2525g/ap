@@ -1,0 +1,9 @@
+﻿{% extends 'base.html' %}
+{% block title %}یافت نشد{% endblock %}
+{% block content %}
+<div class="error-page">
+  <h1>404</h1>
+  <p>صفحه‌ای که دنبالش هستید وجود ندارد.</p>
+  <a href="{{ url_for('web_main.index') }}" class="btn btn-primary">بازگشت به خانه</a>
+</div>
+{% endblock %}

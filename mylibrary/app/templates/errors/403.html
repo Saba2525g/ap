@@ -1,0 +1,9 @@
+﻿{% extends 'base.html' %}
+{% block title %}دسترسی ممنوع{% endblock %}
+{% block content %}
+<div class="error-page">
+  <h1>403</h1>
+  <p>شما اجازه‌ی دسترسی به این بخش را ندارید.</p>
+  <a href="{{ url_for('web_main.index') }}" class="btn btn-primary">بازگشت به خانه</a>
+</div>
+{% endblock %}

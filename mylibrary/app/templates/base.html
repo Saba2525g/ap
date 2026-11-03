@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MyLibrary{% endblock %}</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <style>
+    :root {
+      --navy-900: #0b1120;
+      --navy-800: #111a2e;
+      --navy-700: #1a2540;
+      --gold-500: #d4af37;
+      --gold-400: #e2c25a;
+      --teal-500: #14b8a6;
+      --gray-100: #f5f7fa;
+      --gray-300: #cbd5e1;
+      --gray-500: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      background: var(--gray-100);
+      color: var(--navy-900);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    a { color: var(--teal-500); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---- Navbar ---- */
+    .navbar {
+      background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.15);
+    }
+    .navbar .brand { font-size: 1.4rem; font-weight: 700; color: var(--gold-500); letter-spacing: .5px; }
+    .navbar nav { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+    .navbar nav a { color: #e2e8f0; font-size: .95rem; padding: .3rem .6rem; border-radius: 6px; transition: background .2s; }
+    .navbar nav a:hover { background: rgba(255,255,255,.08); text-decoration: none; }
+    .navbar .role-badge {
+      background: rgba(212,175,55,.15); color: var(--gold-400);
+      padding: .15rem .55rem; border-radius: 999px; font-size: .8rem;
+    }
+    .btn-link { background: none; border: none; color: #e2e8f0; cursor: pointer; font-family: inherit; font-size: .95rem; }
+
+    /* ---- Container ---- */
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+
+    /* ---- Alerts ---- */
+    .flash { padding: .8rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: .95rem; }
+    .flash.success { background: #d1fae5; color: #065f46; border-right: 4px solid var(--success); }
+    .flash.danger  { background: #fee2e2; color: #7f1d1d; border-right: 4px solid var(--danger); }
+    .flash.warning { background: #fef3c7; color: #78350f; border-right: 4px solid var(--warning); }
+    .flash.info    { background: #dbeafe; color: #1e3a8a; border-right: 4px solid var(--info); }
+
+    /* ---- Cards ---- */
+    .card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(15,23,42,.06);
+      padding: 2rem;
+    }
+    .card-title { font-size: 1.4rem; margin-bottom: 1.2rem; color: var(--navy-900); }
+
+    /* ---- Forms ---- */
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; margin-bottom: .35rem; font-weight: 500; color: var(--navy-700); font-size: .95rem; }
+    .form-control {
+      width: 100%; padding: .65rem .9rem;
+      border: 1.5px solid var(--gray-300); border-radius: 8px;
+      font-family: inherit; font-size: .95rem;
+      transition: border-color .15s, box-shadow .15s;
+      background: #fff;
+    }
+    .form-control:focus { outline: none; border-color: var(--teal-500); box-shadow: 0 0 0 3px rgba(20,184,166,.15); }
+    .form-error { color: var(--danger); font-size: .85rem; margin-top: .25rem; display: block; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-block; padding: .7rem 1.4rem;
+      border: none; border-radius: 8px; cursor: pointer;
+      font-family: inherit; font-size: 1rem; font-weight: 600;
+      transition: transform .1s, box-shadow .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+      color: #fff; box-shadow: 0 4px 12px rgba(15,23,42,.2);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
+      color: var(--navy-900);
+      box-shadow: 0 4px 12px rgba(212,175,55,.25);
+    }
+    .btn-block { width: 100%; }
+
+    /* ---- Auth pages ---- */
+    .auth-wrap { min-height: calc(100vh - 4rem); display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+    .auth-card { width: 100%; max-width: 480px; }
+    .auth-card h1 { font-size: 1.6rem; color: var(--navy-900); margin-bottom: .3rem; }
+    .auth-card .subtitle { color: var(--gray-500); font-size: .9rem; margin-bottom: 1.5rem; }
+
+    /* ---- Error pages ---- */
+    .error-page { text-align: center; padding: 4rem 1rem; }
+    .error-page h1 { font-size: 5rem; color: var(--gold-500); line-height: 1; }
+    .error-page p { color: var(--gray-500); margin: 1rem 0 2rem; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="{{ url_for('web_main.index') }}" class="brand">MyLibrary</a>
+    <nav>
+      <a href="{{ url_for('web_main.index') }}">خانه</a>
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('web_auth.profile') }}">پروفایل</a>
+        <span class="role-badge">
+          {{ {'student':'دانشجو','employee':'کارمند','admin':'مدیر','guest':'مهمان'}.get(current_user.role, current_user.role) }}
+        </span>
+        <form action="{{ url_for('web_auth.logout') }}" method="POST" style="display:inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-link">خروج</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('web_auth.login') }}">ورود</a>
+        <a href="{{ url_for('web_auth.register') }}">ثبت‌نام</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

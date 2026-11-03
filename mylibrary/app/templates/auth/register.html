@@ -1,0 +1,66 @@
+﻿{% extends 'base.html' %}
+{% block title %}ثبت‌نام | MyLibrary{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="card auth-card">
+    <h1>ثبت‌نام دانشجو</h1>
+    <p class="subtitle">اطلاعات خود را وارد کنید</p>
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.full_name.label }}
+        {{ form.full_name(class='form-control', placeholder='مثلاً: سارا احمدی') }}
+        {% for e in form.full_name.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(class='form-control', placeholder='you@example.com') }}
+        {% for e in form.email.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.student_number.label }}
+        {{ form.student_number(class='form-control', placeholder='مثلاً: 40123456') }}
+        {% for e in form.student_number.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.phone.label }}
+        {{ form.phone(class='form-control', placeholder='09xxxxxxxxx') }}
+        {% for e in form.phone.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.faculty.label }}
+        {{ form.faculty(class='form-control') }}
+      </div>
+      <div class="form-group">
+        {{ form.major.label }}
+        {{ form.major(class='form-control') }}
+      </div>
+      <div class="form-group">
+        {{ form.enrollment_year.label }}
+        {{ form.enrollment_year(class='form-control', placeholder='1402') }}
+      </div>
+
+      <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(class='form-control', placeholder='حداقل ۸ کاراکتر') }}
+        {% for e in form.password.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.confirm.label }}
+        {{ form.confirm(class='form-control') }}
+        {% for e in form.confirm.errors %}<span class="form-error">{{ e }}</span>{% endfor %}
+      </div>
+
+      {{ form.submit(class='btn btn-primary btn-block') }}
+    </form>
+    <p style="margin-top:1.2rem; text-align:center; font-size:.9rem; color:var(--gray-500);">
+      حساب دارید؟ <a href="{{ url_for('web_auth.login') }}">وارد شوید</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
