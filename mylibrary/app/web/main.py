@@ -1,41 +1,37 @@
-"""Main web routes: dashboard."""
+"""Main dashboard route."""
 from __future__ import annotations
 
 from flask import Blueprint, render_template
 from flask_login import current_user
 
-from app.extensions import db
-from app.models.book import Book
-from app.models.borrowing import Borrowing, Reservation
-from app.models.user import User
+from app.services import dashboard_service as dash
 
 bp = Blueprint("web_main", __name__)
 
 
 @bp.route("/")
 def index():
-    stats = {
-        "total_books": db.session.query(Book).count(),
-        "available_books": db.session.query(Book).filter(Book.available_copies > 0).count(),
-        "total_users": db.session.query(User).count(),
-    }
+    stats = dash.global_stats()
+    chart_7d = dash.chart_borrowings_7d()
+    chart_cat = dash.chart_category_pie()
+    chart_status = dash.chart_borrowing_status()
+    popular = dash.popular_books(5)
 
-    if current_user.is_authenticated:
-        if current_user.is_student and current_user.student:
-            stats["my_active"] = db.session.query(Borrowing).filter(
-                Borrowing.student_id == current_user.student.id,
-                Borrowing.status.in_(["active", "overdue", "pending"]),
-            ).count()
-            stats["my_overdue"] = db.session.query(Borrowing).filter(
-                Borrowing.student_id == current_user.student.id,
-                Borrowing.status == "overdue",
-            ).count()
-        if current_user.role in ("admin", "employee"):
-            stats["pending_requests"] = db.session.query(Borrowing).filter(
-                Borrowing.status == "pending"
-            ).count()
-            stats["active_loans"] = db.session.query(Borrowing).filter(
-                Borrowing.status.in_(["active", "overdue"])
-            ).count()
+    student_stats_data = {}
+    if current_user.is_authenticated and current_user.is_student and current_user.student:
+        student_stats_data = dash.student_stats(current_user.student)
 
-    return render_template("dashboard.html", stats=stats)
+    recent = []
+    if current_user.is_authenticated and current_user.role in ("admin", "employee"):
+        recent = dash.recent_activities(10)
+
+    return render_template(
+        "dashboard.html",
+        stats=stats,
+        student_stats=student_stats_data,
+        chart_7d=chart_7d,
+        chart_cat=chart_cat,
+        chart_status=chart_status,
+        popular=popular,
+        recent=recent,
+    )

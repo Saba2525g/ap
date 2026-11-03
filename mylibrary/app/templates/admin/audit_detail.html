@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Audit Detail | MyLibrary{% endblock %}
+{% block content %}
+<div class="card" style="max-width:720px; margin:0 auto;">
+  <h1 class="card-title">جزئیات Audit</h1>
+  <table style="width:100%;">
+    <tr><td style="padding:.4rem; color:var(--gray-500);">ID:</td><td>{{ entry.id }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">Action:</td><td>{{ entry.action }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">User:</td><td>{{ entry.actor.email if entry.actor else '—' }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">Entity:</td><td>{{ entry.entity_type }} #{{ entry.entity_id }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">Details:</td><td>{{ entry.details or '—' }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">IP:</td><td>{{ entry.ip_address or '—' }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">UA:</td><td>{{ entry.user_agent or '—' }}</td></tr>
+    <tr><td style="padding:.4rem; color:var(--gray-500);">تاریخ:</td><td>{{ entry.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td></tr>
+  </table>
+  <a href="{{ url_for('web_admin.audit_list') }}" class="btn btn-primary" style="margin-top:1rem;">بازگشت</a>
+</div>
+{% endblock %}

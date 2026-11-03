@@ -1,61 +1,182 @@
 {% extends 'base.html' %}
 {% block title %}داشبورد | MyLibrary{% endblock %}
 {% block content %}
-<div style="margin-bottom:2rem;">
-  <h1 style="font-size:2rem; color:var(--navy-900);">داشبورد</h1>
-  <p style="color:var(--gray-500);">خوش آمدید{% if current_user.is_authenticated %}، {{ current_user.full_name }}{% endif %}</p>
+
+<!-- Header -->
+<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.75rem; flex-wrap:wrap; gap:1rem;">
+  <div>
+    <h1 style="font-size:2.2rem; font-weight:800; color:var(--navy-900); letter-spacing:-.5px;">داشبورد</h1>
+    <p style="color:var(--gray-500); font-size:.95rem; margin-top:.2rem;">
+      {% if current_user.is_authenticated %}خوش آمدید، <strong>{{ current_user.full_name }}</strong> 👋{% else %}به کتابخانه هوشمند خوش آمدید{% endif %}
+    </p>
+  </div>
+  <a href="{{ url_for('web_books.catalog') }}" class="btn btn-gold">📚 مشاهده کاتالوگ</a>
 </div>
 
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:2rem;">
-  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--teal-500);">
-    <p style="color:var(--gray-500); font-size:.85rem;">کل کتاب‌ها</p>
-    <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.total_books }}</p>
+<!-- Stat cards -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="label">📚 کل کتاب‌ها</div>
+    <div class="value">{{ stats.total_books }}</div>
+    <div class="sub">{{ stats.available_books }} موجود</div>
   </div>
-  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--success);">
-    <p style="color:var(--gray-500); font-size:.85rem;">موجود</p>
-    <p style="font-size:2rem; color:var(--success); font-weight:700;">{{ stats.available_books }}</p>
+  <div class="stat-card teal">
+    <div class="label">📖 امانت‌های فعال</div>
+    <div class="value">{{ stats.active_loans }}</div>
+    <div class="sub">{{ stats.pending_requests }} در انتظار</div>
   </div>
-  <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--gold-500);">
-    <p style="color:var(--gray-500); font-size:.85rem;">اعضا</p>
-    <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.total_users }}</p>
+  <div class="stat-card gold">
+    <div class="label">👥 اعضا</div>
+    <div class="value">{{ stats.total_users }}</div>
+    <div class="sub">{{ stats.total_students }} دانشجو</div>
   </div>
-  {% if stats.get('pending_requests') is not none %}
-    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--warning);">
-      <p style="color:var(--gray-500); font-size:.85rem;">درخواست‌های در انتظار</p>
-      <p style="font-size:2rem; color:var(--warning); font-weight:700;">{{ stats.pending_requests }}</p>
-    </div>
-    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--danger);">
-      <p style="color:var(--gray-500); font-size:.85rem;">امانت‌های فعال</p>
-      <p style="font-size:2rem; color:var(--danger); font-weight:700;">{{ stats.active_loans }}</p>
-    </div>
-  {% endif %}
-  {% if stats.get('my_active') is not none %}
-    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--teal-500);">
-      <p style="color:var(--gray-500); font-size:.85rem;">امانت‌های فعال من</p>
-      <p style="font-size:2rem; color:var(--navy-900); font-weight:700;">{{ stats.my_active }}</p>
-    </div>
-    <div style="background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 4px 16px rgba(15,23,42,.06); border-right:4px solid var(--danger);">
-      <p style="color:var(--gray-500); font-size:.85rem;">تأخیرهای من</p>
-      <p style="font-size:2rem; color:var(--danger); font-weight:700;">{{ stats.my_overdue }}</p>
+  <div class="stat-card red">
+    <div class="label">⏰ تأخیرها</div>
+    <div class="value">{{ stats.overdue_loans }}</div>
+    <div class="sub">{{ stats.total_reservations }} رزرو فعال</div>
+  </div>
+</div>
+
+{% if student_stats %}
+<div class="section-title">📊 آمار شخصی من</div>
+<div class="stat-grid">
+  <div class="stat-card green">
+    <div class="label">📗 امانت‌های فعال</div>
+    <div class="value">{{ student_stats.my_active }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">⏳ در انتظار تأیید</div>
+    <div class="value">{{ student_stats.my_pending }}</div>
+  </div>
+  <div class="stat-card red">
+    <div class="label">⚠️ تأخیرها</div>
+    <div class="value">{{ student_stats.my_overdue }}</div>
+  </div>
+  <div class="stat-card gold">
+    <div class="label">🔖 رزروها</div>
+    <div class="value">{{ student_stats.my_reservations }}</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Charts -->
+<div class="section-title">📈 نمودارها</div>
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:1.1rem; margin-bottom:1.5rem;">
+  <div class="glass" style="padding:1.5rem;">
+    <h3 style="margin-bottom:1rem; color:var(--navy-900); font-size:1rem; font-weight:700;">امانت‌های ۷ روز اخیر</h3>
+    <canvas id="chart7d" height="110"></canvas>
+  </div>
+  <div class="glass" style="padding:1.5rem;">
+    <h3 style="margin-bottom:1rem; color:var(--navy-900); font-size:1rem; font-weight:700;">توزیع دسته‌ها</h3>
+    <canvas id="chartCat" height="200"></canvas>
+  </div>
+</div>
+
+<!-- Bottom grid -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;">
+  <div class="glass" style="padding:1.5rem;">
+    <h3 style="margin-bottom:1rem; color:var(--navy-900); font-size:1rem; font-weight:700;">🏆 محبوب‌ترین کتاب‌ها</h3>
+    {% if popular %}
+      {% for p in popular %}
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:.7rem 0; border-bottom:1px solid var(--gray-200);">
+          <div style="display:flex; align-items:center; gap:.6rem;">
+            <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--gold-600),var(--gold-400));color:var(--navy-950);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;">{{ loop.index }}</div>
+            <span style="font-weight:500;">{{ p.title }}</span>
+          </div>
+          <span class="chip chip-success">{{ p.count }} امانت</span>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="color:var(--gray-500); font-size:.9rem;">هنوز داده‌ای نیست.</p>
+    {% endif %}
+  </div>
+
+  {% if recent %}
+    <div class="glass" style="padding:1.5rem;">
+      <h3 style="margin-bottom:1rem; color:var(--navy-900); font-size:1rem; font-weight:700;">🕐 آخرین فعالیت‌ها</h3>
+      {% for r in recent %}
+        <div style="display:flex; gap:.7rem; padding:.5rem 0; border-bottom:1px solid var(--gray-200); font-size:.85rem;">
+          <div style="color:var(--gold-600); font-weight:600; flex-shrink:0;">{{ r.action }}</div>
+          <div style="color:var(--gray-500); flex:1;">{{ r.details or '' }}</div>
+          <div style="color:var(--gray-500); font-size:.75rem; flex-shrink:0;">{{ r.created_at.strftime('%H:%M') }}</div>
+        </div>
+      {% endfor %}
     </div>
   {% endif %}
 </div>
 
-<h2 style="font-size:1.3rem; margin-bottom:1rem; color:var(--navy-900);">دسترسی سریع</h2>
-<div style="display:flex; gap:.8rem; flex-wrap:wrap;">
-  <a href="{{ url_for('web_books.catalog') }}" class="btn btn-primary">📚 کاتالوگ کتاب‌ها</a>
+<!-- Quick actions -->
+<div class="section-title">⚡ دسترسی سریع</div>
+<div style="display:flex; gap:.7rem; flex-wrap:wrap;">
+  <a href="{{ url_for('web_books.catalog') }}" class="btn btn-primary">📚 کاتالوگ</a>
   {% if current_user.is_authenticated %}
     {% if current_user.is_student %}
       <a href="{{ url_for('web_borrowings.my') }}" class="btn btn-gold">📖 امانت‌های من</a>
     {% endif %}
     {% if current_user.role in ('admin', 'employee') %}
-      <a href="{{ url_for('web_borrowings.requests_list') }}" class="btn btn-gold">📋 درخواست‌های امانت</a>
-      <a href="{{ url_for('web_borrowings.all_list') }}" class="btn btn-primary">📊 همه امانت‌ها</a>
-      <a href="{{ url_for('web_books.manage') }}" class="btn" style="background:#e2e8f0; color:var(--navy-900);">⚙️ مدیریت کتاب‌ها</a>
+      <a href="{{ url_for('web_borrowings.requests_list') }}" class="btn btn-gold">📋 درخواست‌ها</a>
+      <a href="{{ url_for('web_borrowings.all_list') }}" class="btn btn-teal">📊 همه امانت‌ها</a>
+      <a href="{{ url_for('web_books.manage') }}" class="btn btn-ghost">⚙️ مدیریت</a>
     {% endif %}
-  {% else %}
-    <a href="{{ url_for('web_auth.login') }}" class="btn btn-primary">ورود</a>
-    <a href="{{ url_for('web_auth.register') }}" class="btn btn-gold">ثبت‌نام</a>
+    {% if current_user.is_admin %}
+      <a href="{{ url_for('web_admin.audit_list') }}" class="btn btn-ghost">📝 Audit Log</a>
+    {% endif %}
   {% endif %}
 </div>
+
+<script>
+  // Chart 7d with gradient
+  const ctx7d = document.getElementById('chart7d').getContext('2d');
+  const grad = ctx7d.createLinearGradient(0, 0, 0, 300);
+  grad.addColorStop(0, 'rgba(20,184,166,0.85)');
+  grad.addColorStop(1, 'rgba(20,184,166,0.15)');
+  new Chart(ctx7d, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_7d.labels|tojson }},
+      datasets: [{
+        label: 'درخواست‌ها',
+        data: {{ chart_7d.counts|tojson }},
+        backgroundColor: grad,
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0b1120', padding: 10, cornerRadius: 8,
+          titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' },
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(203,213,225,.4)' }, ticks: { font: { family: 'Vazirmatn' } } },
+        x: { grid: { display: false }, ticks: { font: { family: 'Vazirmatn' } } }
+      }
+    }
+  });
+
+  // Pie with palette
+  new Chart(document.getElementById('chartCat'), {
+    type: 'doughnut',
+    data: {
+      labels: {{ chart_cat.labels|tojson }},
+      datasets: [{
+        data: {{ chart_cat.counts|tojson }},
+        backgroundColor: ['#d4af37','#14b8a6','#3b82f6','#ef4444','#8b5cf6','#f59e0b','#10b981','#64748b'],
+        borderWidth: 3, borderColor: '#fff',
+      }]
+    },
+    options: {
+      cutout: '65%',
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Vazirmatn', size: 11 }, padding: 12, boxWidth: 12, boxHeight: 12 } },
+        tooltip: { backgroundColor: '#0b1120', padding: 10, cornerRadius: 8, titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' } }
+      }
+    }
+  });
+</script>
 {% endblock %}

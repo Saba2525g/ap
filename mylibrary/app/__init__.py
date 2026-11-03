@@ -32,10 +32,14 @@ def create_app(config_name=None):
     from app.web.main import bp as web_main_bp
     from app.web.books import bp as web_books_bp
     from app.web.borrowings import bp as web_borrowings_bp
+    from app.web.notifications import bp as web_notifications_bp
+    from app.web.admin import bp as web_admin_bp
     app.register_blueprint(web_auth_bp)
     app.register_blueprint(web_main_bp)
     app.register_blueprint(web_books_bp)
     app.register_blueprint(web_borrowings_bp)
+    app.register_blueprint(web_notifications_bp)
+    app.register_blueprint(web_admin_bp)
 
     # ---- Error handlers ----
     @app.errorhandler(404)

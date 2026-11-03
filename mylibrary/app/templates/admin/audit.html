@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Audit Log | MyLibrary{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:1.5rem;">Audit Log</h1>
+<div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+  <table style="width:100%; border-collapse:collapse; font-size:.85rem;">
+    <thead style="background:var(--navy-900); color:#fff;">
+      <tr>
+        <th style="padding:.7rem; text-align:right;">تاریخ</th>
+        <th style="padding:.7rem; text-align:right;">کاربر</th>
+        <th style="padding:.7rem; text-align:right;">عملیات</th>
+        <th style="padding:.7rem; text-align:right;">جزئیات</th>
+        <th style="padding:.7rem; text-align:right;">IP</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in items %}
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:.5rem;">{{ e.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td style="padding:.5rem;">{{ e.actor.email if e.actor else '—' }}</td>
+          <td style="padding:.5rem;"><span style="color:var(--gold-500);">{{ e.action }}</span></td>
+          <td style="padding:.5rem;">{{ e.details or '—' }}</td>
+          <td style="padding:.5rem;">{{ e.ip_address or '—' }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

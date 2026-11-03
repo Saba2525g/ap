@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}اعلان‌ها | MyLibrary{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+  <h1>اعلان‌ها</h1>
+  {% if unread > 0 %}
+    <form method="POST" action="{{ url_for('web_notifications.read_all') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-primary" style="padding:.5rem 1rem;">همه را خوانده کن</button>
+    </form>
+  {% endif %}
+</div>
+
+{% if items %}
+  <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(15,23,42,.06);">
+    {% for n in items %}
+      <div style="padding:1rem 1.4rem; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; {% if not n.is_read %}background:#fef3c7;{% endif %}">
+        <div>
+          <h3 style="margin:0; color:var(--navy-900); font-size:1rem;">
+            {% if not n.is_read %}<span style="color:var(--warning);">●</span>{% endif %}
+            {{ n.title }}
+          </h3>
+          <p style="color:var(--gray-500); margin:.3rem 0; font-size:.9rem;">{{ n.message }}</p>
+          <span style="color:var(--gray-500); font-size:.75rem;">{{ n.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+        {% if not n.is_read %}
+          <form method="POST" action="{{ url_for('web_notifications.mark_read', nid=n.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn" style="background:var(--gray-100); color:var(--navy-900); padding:.4rem .8rem; font-size:.8rem;">خوانده شد</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div style="background:#fff; padding:3rem; text-align:center; border-radius:12px; color:var(--gray-500);">
+    اعلانی ندارید.
+  </div>
+{% endif %}
+{% endblock %}
