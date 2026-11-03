@@ -34,12 +34,27 @@ def create_app(config_name=None):
     from app.web.borrowings import bp as web_borrowings_bp
     from app.web.notifications import bp as web_notifications_bp
     from app.web.admin import bp as web_admin_bp
+
+    from app.api.auth import bp as api_auth_bp
+    from app.api.books import bp as api_books_bp
+    from app.api.borrowings import bp as api_borrowings_bp
+    from app.api.users import bp as api_users_bp
+    from app.api.stats import bp as api_stats_bp
     app.register_blueprint(web_auth_bp)
     app.register_blueprint(web_main_bp)
     app.register_blueprint(web_books_bp)
     app.register_blueprint(web_borrowings_bp)
     app.register_blueprint(web_notifications_bp)
     app.register_blueprint(web_admin_bp)
+    app.register_blueprint(api_auth_bp)
+    app.register_blueprint(api_books_bp)
+    app.register_blueprint(api_borrowings_bp)
+    app.register_blueprint(api_users_bp)
+    app.register_blueprint(api_stats_bp)
+
+    # Exempt /api/* from CSRF (JWT-based auth)
+    from app.api.csrf_exempt import register_api_csrf_exemption
+    register_api_csrf_exemption()
 
     # ---- Error handlers ----
     @app.errorhandler(404)

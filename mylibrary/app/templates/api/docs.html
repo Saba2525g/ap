@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}API Docs | MyLibrary{% endblock %}
+{% block content %}
+<div style="text-align:center; margin-bottom:2rem;">
+  <h1 style="font-size:2rem;">API Documentation</h1>
+  <p style="color:var(--gray-500);">MyLibrary REST API v1 — JWT Authentication</p>
+</div>
+
+<div class="glass" style="padding:2rem; margin-bottom:1rem;">
+  <h2 style="margin-bottom:1rem;">Authentication</h2>
+  <p style="color:var(--gray-500); margin-bottom:1rem;">All protected endpoints require: <code style="background:#0b1120;color:#e2c25a;padding:.2rem .5rem;border-radius:6px;">Authorization: Bearer &lt;token&gt;</code></p>
+  <p>Get a token via <code>POST /api/v1/auth/login</code> with body:</p>
+  <pre style="background:#0b1120;color:#a7f3d0;padding:1rem;border-radius:8px;overflow:auto;">{"email": "...", "password": "..."}</pre>
+</div>
+
+<div class="glass" style="padding:2rem;">
+  <h2 style="margin-bottom:1rem;">Endpoints</h2>
+
+  <h3 style="margin:1.5rem 0 .5rem; color:var(--gold-600);">Auth</h3>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>POST</td><td>/api/v1/auth/register</td><td>ثبت‌نام دانشجو</td></tr>
+    <tr><td>POST</td><td>/api/v1/auth/login</td><td>ورود</td></tr>
+    <tr><td>GET</td><td>/api/v1/auth/me</td><td>اطلاعات کاربر</td></tr>
+  </table>
+
+  <h3 style="margin:1.5rem 0 .5rem; color:var(--gold-600);">Books</h3>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/v1/books?q=&category=&page=</td><td>لیست کتاب‌ها</td></tr>
+    <tr><td>GET</td><td>/api/v1/books/&lt;id&gt;</td><td>جزئیات</td></tr>
+    <tr><td>POST</td><td>/api/v1/books</td><td>ایجاد (staff)</td></tr>
+    <tr><td>PUT</td><td>/api/v1/books/&lt;id&gt;</td><td>ویرایش (staff)</td></tr>
+    <tr><td>DELETE</td><td>/api/v1/books/&lt;id&gt;</td><td>حذف (staff)</td></tr>
+  </table>
+
+  <h3 style="margin:1.5rem 0 .5rem; color:var(--gold-600);">Borrowings</h3>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/v1/borrowings</td><td>لیست امانت‌ها</td></tr>
+    <tr><td>POST</td><td>/api/v1/borrowings</td><td>درخواست امانت</td></tr>
+    <tr><td>POST</td><td>/api/v1/borrowings/&lt;id&gt;/approve</td><td>تأیید (staff)</td></tr>
+    <tr><td>POST</td><td>/api/v1/borrowings/&lt;id&gt;/reject</td><td>رد (staff)</td></tr>
+    <tr><td>POST</td><td>/api/v1/borrowings/&lt;id&gt;/return</td><td>بازگشت (staff)</td></tr>
+  </table>
+
+  <h3 style="margin:1.5rem 0 .5rem; color:var(--gold-600);">Users (admin)</h3>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/v1/users</td><td>لیست کاربران</td></tr>
+    <tr><td>PUT</td><td>/api/v1/users/&lt;id&gt;</td><td>تغییر نقش</td></tr>
+  </table>
+
+  <h3 style="margin:1.5rem 0 .5rem; color:var(--gold-600);">Stats</h3>
+  <table class="data-table">
+    <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/v1/stats/global</td><td>آمار کلی</td></tr>
+    <tr><td>GET</td><td>/api/v1/stats/charts</td><td>داده نمودارها</td></tr>
+    <tr><td>GET</td><td>/api/v1/stats/me</td><td>آمار من</td></tr>
+  </table>
+</div>
+{% endblock %}
